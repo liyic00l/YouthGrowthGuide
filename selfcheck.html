@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>家庭与个人护航自查 · 高性价比人生指南（青少年篇）</title>
-<meta name="description" content="回答一组是否题，快速排查家庭防线、健康死角与法律风险：哪一块漏得最多、先做哪几件。直接匹配条目与给爸妈的话术，完全离线运行。">
+<title>家庭与个人成长护航自查 · 高性价比人生指南</title>
+<meta name="description" content="回答一组是否题，快速排查家庭防线、网络安全、学业与法律风险：哪一块漏得最多、先做哪几件。完全离线运行。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310b981'/%3E%3Cpath d='M17 33l10 11 20-24' fill='none' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -63,7 +63,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .score-num{font-size:42px;font-weight:900;line-height:1}
 .score-label{font-size:13px;color:var(--t3);margin-top:6px}
 .out-card{background:var(--bg-alt);border:1px solid var(--divider);border-left:4px solid var(--red);border-radius:12px;padding:16px;margin-bottom:14px}
-.out-card.warn{border-left-color:var(--yellow)}
 .out-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
 .out-title{font-size:15px;font-weight:700}
 .out-human{font-size:13.5px;color:var(--t2);margin:6px 0}
@@ -73,7 +72,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 </head>
 <body>
 <div class="nav">
-  <span class="title">🛡️ 家庭护航自查系统</span>
+  <span class="title">🛡️ 家庭成长护航自查系统</span>
   <span class="sp"></span>
   <a href="index.html">返回检索手册</a>
 </div>
@@ -82,19 +81,19 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   <div id="ask-view">
     <div class="hero">
       <h1>家庭防线与成长自查问卷</h1>
-      <p>花 3 分钟回答这组关键问题，系统将自动算出家庭健康、财产与人身自由的薄弱点，并列出最紧急需要落地的优先行动建议。</p>
+      <p>花 3 分钟回答这组关键问题，系统将自动排查家庭财产、法律底线、学业与网络安全的薄弱盲区，并列出最紧急需要落地的优先行动建议。</p>
     </div>
 
     <div class="role-select">
-      <button class="role-btn active" id="btn-role-parent" onclick="switchRole('parent')">👨‍👩‍👧 家长排查版（12项核心防线）</button>
-      <button class="role-btn" id="btn-role-boy" onclick="switchRole('boy')">👦 男孩自查版（10项保身防坑）</button>
-      <button class="role-btn" id="btn-role-girl" onclick="switchRole('girl')">👧 女孩自查版（10项自护防身）</button>
+      <button class="role-btn active" id="btn-role-parent" onclick="switchRole('parent')">👨‍👩‍👧 家长排查版（10项核心防线）</button>
+      <button class="role-btn" id="btn-role-boy" onclick="switchRole('boy')">👦 男孩自查版（8项防身防坑）</button>
+      <button class="role-btn" id="btn-role-girl" onclick="switchRole('girl')">👧 女孩自查版（8项自护防骗）</button>
     </div>
 
     <div id="questions-container"></div>
 
     <div class="float-bar">
-      <span id="answered-stat" style="color:var(--t2);font-size:13.5px">已排查：0 / 12 项</span>
+      <span id="answered-stat" style="color:var(--t2);font-size:13.5px">已排查：0 项</span>
       <button class="calc-btn" onclick="generateReport()">一键生成护航诊断报告</button>
     </div>
   </div>
@@ -115,7 +114,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 
     <div style="text-align:center;margin-top:32px">
       <button class="calc-btn" style="background:var(--bg-soft);color:var(--t1);border:1px solid var(--divider)" onclick="backToAsk()">重新自查</button>
-      <a href="index.html" class="calc-btn" style="margin-left:12px;text-decoration:none">前往全书 109 条知识库</a>
+      <a href="index.html" class="calc-btn" style="margin-left:12px;text-decoration:none">前往全书 51 条知识库</a>
     </div>
   </div>
 </div>
@@ -123,42 +122,36 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <script>
 const QUESTIONS_DB = {
   parent: [
-    { id: 'p1', num: 96, sec: 17, title: '微信/支付宝是否已关闭免密支付与自动续费？', desc: '未成年人对虚拟数字无痛感，免密开启极易发生几分钟内误充值数万元', bad: 'no' },
-    { id: 'p2', num: 100, sec: 18, title: '给孩子用的手机SIM卡是否已设置专用PIN码？', desc: '未设PIN码时，手机丢失小偷拔卡插新手机直接接验证码重置微信支付宝', bad: 'no' },
-    { id: 'p3', num: 98, sec: 17, title: '家庭是否约定了防AI换脸拟声电信诈骗的安全暗号？', desc: '骗子仅需10秒音频即可克隆孩子声音，涉及借钱转账必须对暗号', bad: 'no' },
-    { id: 'p4', num: 85, sec: 15, title: '全家是否知晓 12-14-16 周岁三道刑事责任年龄红线？', desc: '12周岁恶性伤害经最高检核准即追刑责，告诫孩子绝无“未成年免死金牌”', bad: 'no' },
-    { id: 'p5', num: 86, sec: 15, title: '是否向孩子三令五申“严禁出租借出微信与银行卡”？', desc: '中学生最易染上帮信罪沦为洗钱工具人，涉案央行惩戒5年无法开卡考公受阻', bad: 'no' },
-    { id: 'p6', num: 14, sec: 03, title: '是否在孩子洗澡或换衣时自查过脊柱侧弯（Adam前屈）？', desc: '骨骺闭合前是特发性脊柱侧弯黄金矫正期，超40度需开胸动大手术', bad: 'no' },
-    { id: 'p7', num: 1, sec: 01, title: '孩子白天是否能保证累计在户外自然光下活动2小时？', desc: '自然光刺激视网膜分泌多巴胺，是预防近视最有效且零成本的手段', bad: 'no' },
-    { id: 'p8', num: 7, sec: 02, title: '孩子6-12岁长出的恒磨牙（六龄齿）是否做了窝沟封闭？', desc: '六龄齿终身不换，窝沟封闭能减少80%以上的大牙咬合面龋齿', bad: 'no' },
-    { id: 'p9', num: 36, sec: 06, title: '家里发烧退烧药是否严格区分对乙酰氨基酚与布洛芬？', desc: '严禁两种退烧药同时混吃或交替服用，超量会导致急性肝肾衰竭', bad: 'no' },
-    { id: 'p10', num: 71, sec: 12, title: '晚上睡觉时孩子手机是否做到“物理隔离”放到房外？', desc: '手机放床头即使关静音也会持续产生注意力残留与睡前蓝光抑制', bad: 'no' },
-    { id: 'p11', num: 74, sec: 13, title: '孩子遭遇严重躯体化厌学时，是否知晓12356心理热线？', desc: '头痛肚子疼去医院查无器质病变，多为心理危机躯体化，需科学干预而非斥责', bad: 'no' },
-    { id: 'p12', num: 108, sec: 20, title: '是否了解国家每年2万元生源地助学贷款（在校零利息）？', desc: '普通家庭读大学绝不借高利贷，国家全额贴息，毕业有5年还本宽限期', bad: 'no' }
+    { id: 'p1', num: 38, title: '微信/支付宝是否已关闭免密支付与自动续费？', desc: '未成年人对虚拟数字无痛感，免密开启极易发生几分钟内误充值数万元', bad: 'no' },
+    { id: 'p2', num: 42, title: '给孩子用的手机SIM卡是否已设置专用PIN码？', desc: '未设PIN码时，手机丢失小偷拔卡插新手机直接接验证码重置微信支付宝', bad: 'no' },
+    { id: 'p3', num: 40, title: '家庭是否约定了防AI换脸拟声电信诈骗的安全暗号？', desc: '骗子仅需10秒音频即可克隆孩子声音，涉及借钱转账必须对暗号', bad: 'no' },
+    { id: 'p4', num: 27, title: '全家是否知晓 12-14-16 周岁三道刑事责任年龄红线？', desc: '12周岁恶性伤害经最高检核准即追刑责，告诫孩子绝无“未成年免死金牌”', bad: 'no' },
+    { id: 'p5', num: 28, title: '是否向孩子三令五申“严禁出租借出微信与银行卡”？', desc: '中学生最易染上帮信罪沦为洗钱工具人，涉案央行惩戒5年无法开卡考公受阻', bad: 'no' },
+    { id: 'p6', num: 13, title: '晚上睡觉时孩子手机是否做到“物理隔离”放到房外？', desc: '手机放床头即使关静音也会持续产生注意力残留与睡前蓝光抑制', bad: 'no' },
+    { id: 'p7', num: 15, title: '孩子遭遇严重躯体化厌学时，是否知晓12356心理热线？', desc: '去医院查无器质病变多为心理危机躯体化，需科学干预而非斥责', bad: 'no' },
+    { id: 'p8', num: 22, title: '孩子遭遇校园欺凌时，是否知晓2026新治安法行拘线并先取证？', desc: '新治安法明文打击学生欺凌，第一时间固定现场证据与监控是维权生命线', bad: 'no' },
+    { id: 'p9', num: 35, title: '是否警惕天价高考志愿填报规划卡，利用官方免费系统填报？', desc: '省下数万元智商税，各省考试院与阳光高考拥有最权威完整的真实录取位次', bad: 'no' },
+    { id: 'p10', num: 50, title: '是否了解国家每年2万元生源地助学贷款（在校零利息）？', desc: '普通家庭读大学绝不借高利贷，国家全额贴息，毕业有5年还本宽限期', bad: 'no' }
   ],
   boy: [
-    { id: 'b1', num: 17, sec: 04, title: '看见同伴野泳溺水，你是否知道绝不下水、绝不手拉手？', desc: '青少年盲目手拉手施救死亡率极高，必须在岸上大声呼救、抛漂浮物', bad: 'no' },
-    { id: 'b2', num: 26, sec: 04, title: '打球运动阴囊下腹部受到剧烈撞击，是否懂得自查冷敷？', desc: '撞击后剧痛肿胀、排尿困难必须急诊排查睾丸破裂与血肿，保护生殖器官', bad: 'no' },
-    { id: 'b3', num: 88, sec: 15, title: '朋友找你去校门口“站场子撑面子”，你是否能拔腿就跑？', desc: '在场摇旗呐喊在法律上直接认定为聚众斗殴共同犯罪，出人命所有人负刑责', bad: 'no' },
-    { id: 'b4', num: 87, sec: 15, title: '遇到所谓“上头电子烟”，你是否知道里面添加了依托咪酯？', desc: '依托咪酯已按毒品管制，吸食就是吸毒，转手就是贩毒，没有起刑克数限制', bad: 'no' },
-    { id: 'b5', num: 51, sec: 08, title: '去健身房锻炼时，是否能坚决拒绝私教/肌友推销类固醇？', desc: '注射睾酮、大力补等会造成内源性激素停摆、睾丸萎缩与不可逆肝损', bad: 'no' },
-    { id: 'b6', num: 90, sec: 15, title: '你是否知道解限速、改装大电池的电动车属于非法机动车？', desc: '未成年无证驾驶改装机动车撞人，保险一分不赔，父母背负百万连带债务', bad: 'no' },
-    { id: 'b7', num: 40, sec: 07, title: '你是否能正确区分生理性包皮过长与真性包茎？', desc: '能轻松翻开清洗即为假性，无需盲目挨刀做包皮环切手术', bad: 'no' },
-    { id: 'b8', num: 59, sec: 10, title: '背书做题时，你是否采用“合上书主动默写自测”而不是死读？', desc: '主动提取练习（Active Recall）比反复画线看书的记忆留存率高3倍以上', bad: 'no' },
-    { id: 'b9', num: 103, sec: 18, title: '有人花钱租你的微信/抖音号挂机，你是否会坚决拒绝？', desc: '出租账号会被黑产用于诈骗引流洗钱，个人账号永久封禁并被警方传唤', bad: 'no' },
-    { id: 'b10', num: 105, sec: 19, title: '年满18岁时，是否知晓兵役登记与入伍免试专升本政策？', desc: '退役士兵大学学费国家全免代偿，大专直接免试保送本科，考研加分', bad: 'no' }
+    { id: 'b1', num: 30, title: '朋友找你去校门口“站场子撑面子”，你是否能拔腿就跑？', desc: '在场摇旗呐喊在法律上直接认定为聚众斗殴共同犯罪，出人命所有人负刑责', bad: 'no' },
+    { id: 'b2', num: 29, title: '遇到所谓“上头电子烟”，你是否知道里面添加了依托咪酯？', desc: '依托咪酯已按毒品管制，吸食就是吸毒，转手就是贩毒，没有起刑克数限制', bad: 'no' },
+    { id: 'b3', num: 32, title: '你是否知道解限速、改装大电池的电动车属于非法机动车？', desc: '未成年无证驾驶改装机动车撞人，保险一分不赔，父母背负百万连带债务', bad: 'no' },
+    { id: 'b4', num: 1, title: '背书做题时，你是否采用“合上书主动默写自测”而不是死读？', desc: '主动提取练习（Active Recall）比反复画线看书的记忆留存率高3倍以上', bad: 'no' },
+    { id: 'b5', num: 8, title: '刷题时是否穿插练习不同题型，而不是集中猛刷同一类型？', desc: '穿插练习能锻炼考场鉴别知识点模型的能力，避免“上课听懂考场懵圈”', bad: 'no' },
+    { id: 'b6', num: 45, title: '有人花钱租你的微信/抖音号挂机，你是否会坚决拒绝？', desc: '出租账号会被黑产用于诈骗引流洗钱，个人账号永久封禁并被警方传唤', bad: 'no' },
+    { id: 'b7', num: 47, title: '年满18岁时，是否知晓兵役登记与入伍免试专升本政策？', desc: '退役士兵大学学费国家全免代偿，大专直接免试保送本科，考研加分', bad: 'no' },
+    { id: 'b8', num: 46, title: '中考若未上普高线，是否知晓“3+4中本贯通”直升全日制本科？', desc: '公办优质中职贯通培养，不挤普通高考独木桥也能拿到统招全日制本科学历', bad: 'no' }
   ],
   girl: [
-    { id: 'g1', num: 35, sec: 06, title: '痛经严重时，你是否在刚来月经发作初期就规范服用布洛芬？', desc: '前列腺素致痛前及早阻断效果最好，按说明书吃不会产生生理成瘾', bad: 'no' },
-    { id: 'g2', num: 42, sec: 07, title: '13-14岁阶段是否接种了国家免费/低价二价HPV疫苗？', desc: '首性行为前接种HPV疫苗对宫颈癌保护率超90%，早打效果远胜成年追九价', bad: 'no' },
-    { id: 'g3', num: 52, sec: 08, title: '为了穿衣服显瘦，你是否能坚决拒绝催吐管与催吐药？', desc: '催吐胃酸会腐蚀食管声带、溶解牙齿，造成电解质紊乱诱发心脏骤停', bad: 'no' },
-    { id: 'g4', num: 89, sec: 15, title: '在追星或网上争吵时，是否坚决不参与“开盒挂人”发隐私？', desc: '泄露他人身份证、住址和学校触犯侵犯公民信息罪与新治安法拘留线', bad: 'no' },
-    { id: 'g5', num: 94, sec: 16, title: '追星时是否能坚决拒绝向饭圈后援会大粉集资打投冲销量？', desc: '粉头卷款跑路案件频发，学生把生活费打投明星属于最荒谬的剥削', bad: 'no' },
-    { id: 'g6', num: 101, sec: 18, title: '在小红书/朋友圈发日常照时，是否注意遮盖校服、登机牌与家门？', desc: '防止网络开源情报OSINT追踪到真实就读学校、班级与家庭详细门牌', bad: 'no' },
-    { id: 'g7', num: 70, sec: 11, title: '你是否已经抛弃了“女孩子到了高中数理化肯定跟不上”的谎言？', desc: '男女认知潜能在大样本统计上无显著差异，理科差距多来自焦虑心理暗示', bad: 'no' },
-    { id: 'g8', num: 79, sec: 14, title: '遭遇言语孤立或网络欺凌时，是否第一时间录屏存证告诉家长？', desc: '新《治安管理处罚法》明文打击学生欺凌，第一手铁证是依法维权生命线', bad: 'no' },
-    { id: 'g9', num: 106, sec: 19, title: '高考毕业后找兼职，是否能识破“招前台/模特先办医美贷”陷阱？', desc: '凡是入职前要交押金或诱导贷款整容的100%是套路贷黑中介', bad: 'no' },
-    { id: 'g10', num: 23, sec: 04, title: '出现突发右下腹固定剧痛伴发热，是否能警惕急性阑尾炎？', desc: '麦氏点压痛且反跳痛，严禁盲目吃止痛药掩盖病情，6小时内需急诊就医', bad: 'no' }
+    { id: 'g1', num: 12, title: '你是否已经抛弃了“女孩子到了高中数理化肯定跟不上”的偏见？', desc: '男女认知潜能在大样本统计上无显著差异，理科差距多来自焦虑心理暗示', bad: 'no' },
+    { id: 'g2', num: 31, title: '在追星或网上争吵时，是否坚决不参与“开盒挂人”发隐私？', desc: '泄露他人身份证、住址和学校触犯侵犯公民信息罪与新治安法拘留线', bad: 'no' },
+    { id: 'g3', num: 36, title: '追星时是否能坚决拒绝向饭圈后援会大粉集资打投冲销量？', desc: '粉头卷款跑路案件频发，学生把生活费打投明星属于最荒谬的剥削', bad: 'no' },
+    { id: 'g4', num: 43, title: '在小红书/朋友圈发日常照时，是否注意遮盖校服、登机牌与家门？', desc: '防止网络开源情报OSINT追踪到真实就读学校、班级与家庭详细门牌', bad: 'no' },
+    { id: 'g5', num: 21, title: '遭遇言语孤立或网络欺凌时，是否第一时间录屏存证告诉家长？', desc: '新《治安管理处罚法》明文打击学生欺凌，第一手铁证是依法维权生命线', bad: 'no' },
+    { id: 'g6', num: 48, title: '高考毕业后找兼职，是否能识破“招前台/模特先办美容贷”陷阱？', desc: '凡是入职前要交押金或诱导贷款整容的100%是套路贷黑中介', bad: 'no' },
+    { id: 'g7', num: 7, title: '面对大考极度紧张时，是否尝试过“考前10分钟书写焦虑宣泄”？', desc: '将焦虑写在白纸上释放工作记忆容量，平均能提升考场成绩 5% 到 10%', bad: 'no' },
+    { id: 'g8', num: 41, title: '接到自称“公检法/注销征信”要求共享屏幕的电话是否能立即挂断？', desc: '公检法绝无安全账户，要求屏幕共享100%是电诈黑产', bad: 'no' }
   ]
 };
 
@@ -211,8 +204,8 @@ function updateStat() {
 function generateReport() {
   const qs = QUESTIONS_DB[currentRole];
   const count = Object.keys(answers).length;
-  if (count < 5) {
-    alert(`请至少排查 5 个以上项目，以便生成精准的护航报告。`);
+  if (count < 4) {
+    alert(`请至少排查 4 个以上项目，以便生成精准的护航报告。`);
     return;
   }
 
@@ -227,20 +220,20 @@ function generateReport() {
   document.getElementById('score-val').textContent = score + '分';
   if (score >= 80) {
     document.getElementById('score-val').style.color = 'var(--green)';
-    document.getElementById('score-text').textContent = '家庭护航等级：优异！绝大多数高危红线已建立安全闭环。';
+    document.getElementById('score-text').textContent = '家庭护航等级：优异！核心成长与安全红线已建立良好闭环。';
   } else if (score >= 50) {
     document.getElementById('score-val').style.color = 'var(--yellow)';
-    document.getElementById('score-text').textContent = '家庭护航等级：中等。存在数项财产或人身风险死角，建议尽快补齐。';
+    document.getElementById('score-text').textContent = '家庭护航等级：中等。存在数项财产或法律风险死角，建议尽快补齐。';
   } else {
     document.getElementById('score-val').style.color = 'var(--red)';
-    document.getElementById('score-text').textContent = '家庭护航等级：高危！多项关键法律、生命安全与防骗防线处于裸奔状态。';
+    document.getElementById('score-text').textContent = '家庭护航等级：高危！多项关键法律、家庭资金与防骗防线处于脆弱状态。';
   }
 
   const recContainer = document.getElementById('recommendations-container');
   if (badItems.length === 0) {
     recContainer.innerHTML = `<div class="out-card" style="border-left-color:var(--green)">
       <div class="out-title">🎉 太棒了！您当前排查的项目均已规范落实！</div>
-      <div class="out-human">建议将本书分享给班级群、家长群或身边亲友，帮助更多家庭筑牢成长防线。</div>
+      <div class="out-human">建议将手册分享给班级群、家长群或身边亲友，帮助更多家庭筑牢成长防线。</div>
     </div>`;
   } else {
     let recHtml = '';
@@ -248,11 +241,11 @@ function generateReport() {
       recHtml += `
       <div class="out-card">
         <div class="out-header">
-          <span class="out-title">条目 #${item.num}：${item.title}</span>
+          <span class="out-title">建议 #${item.num}：${item.title}</span>
           <a href="index.html" target="_blank" style="font-size:12.5px;color:var(--brand)">在手册中阅读完整条目 ↗</a>
         </div>
-        <div class="out-human"><b>风险提示</b>：${item.desc}</div>
-        <div class="out-quote"><b>【给爸妈的沟通/落地话术】</b>：条目 #${item.num} 属于循证优先级极高的防线动作，建议今晚家庭饭桌上共同核对并落实设置。</div>
+        <div class="out-human"><b>风险说明</b>：${item.desc}</div>
+        <div class="out-quote"><b>【建议落地动作】</b>：今晚在家庭饭桌上与孩子/父母共同核对条目 #${item.num}，补齐该项安全动作。</div>
       </div>`;
     });
     recContainer.innerHTML = recHtml;
