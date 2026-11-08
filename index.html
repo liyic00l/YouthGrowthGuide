@@ -1,0 +1,242 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>青少年高性价比成长指南 · 男孩-女孩双轨循证决策平台</title>
+<style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --muted: #64748b;
+  --primary: #2563eb; --primary-hover: #1d4ed8; --border: #e2e8f0;
+  --tag-bg: #f1f5f9; --boy: #0284c7; --girl: #db2777; --all: #059669;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+header { background: #1e293b; color: #fff; padding: 36px 20px; text-align: center; }
+header h1 { font-size: 26px; margin-bottom: 8px; font-weight: 700; }
+header p { font-size: 14px; color: #94a3b8; max-width: 640px; margin: 0 auto; }
+.container { max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+.filters { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.search-bar { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; margin-bottom: 14px; outline: none; }
+.search-bar:focus { border-color: var(--primary); }
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
+.tag-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
+.btn-tag { padding: 5px 12px; border-radius: 20px; font-size: 13px; border: 1px solid var(--border); background: var(--tag-bg); cursor: pointer; transition: all 0.2s; }
+.btn-tag.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.btn-tag.boy.active { background: var(--boy); border-color: var(--boy); }
+.btn-tag.girl.active { background: var(--girl); border-color: var(--girl); }
+.stats-bar { font-size: 13px; color: var(--muted); margin-bottom: 16px; display: flex; justify-content: space-between; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: transform 0.15s; }
+.card-title { font-size: 17px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+.badge { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; flex-shrink: 0; }
+.badge.boy { background: #e0f2fe; color: #0369a1; }
+.badge.girl { background: #fce7f3; color: #be185d; }
+.badge.all { background: #dcfce7; color: #15803d; }
+.badge.level { background: #fef3c7; color: #b45309; }
+.section-item { margin-bottom: 8px; font-size: 14px; }
+.section-item strong { color: #334155; }
+.plain-box { background: #f8fafc; border-left: 3px solid var(--primary); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; color: #0f172a; }
+.parent-quote { background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 6px; padding: 8px 12px; margin-top: 10px; font-size: 13px; color: #92400e; display: flex; justify-content: space-between; align-items: center; }
+.copy-btn { background: #f59e0b; color: #fff; border: none; padding: 3px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+.copy-btn:hover { background: #d97706; }
+</style>
+</head>
+<body>
+<header>
+  <h1>青少年高性价比成长指南</h1>
+  <p>专为 10—18 岁中国普通家庭及家长打造 · 循证行动建议 100 条（男生-女生双轨版）</p>
+</header>
+
+<div class="container">
+  <div class="filters">
+    <input type="text" id="searchInput" class="search-bar" placeholder="搜索关键词，如：近视、补牙、阿托品、痛经、助学贷款、欺凌、退款..." oninput="filterItems()">
+    
+    <div class="tag-group">
+      <span class="tag-label">人群视角:</span>
+      <button class="btn-tag active" data-filter="gender" data-val="all" onclick="setFilter(this)">全部</button>
+      <button class="btn-tag boy" data-filter="gender" data-val="boy" onclick="setFilter(this)">男生必看</button>
+      <button class="btn-tag girl" data-filter="gender" data-val="girl" onclick="setFilter(this)">女生必看</button>
+      <button class="btn-tag" data-filter="gender" data-val="common" onclick="setFilter(this)">通用核心</button>
+    </div>
+
+    <div class="tag-group">
+      <span class="tag-label">行动主体:</span>
+      <button class="btn-tag active" data-filter="actor" data-val="all" onclick="setFilter(this)">全部</button>
+      <button class="btn-tag" data-filter="actor" data-val="self" onclick="setFilter(this)">自己就能做</button>
+      <button class="btn-tag" data-filter="actor" data-val="parent" onclick="setFilter(this)">找爸妈一起办</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <span id="resultCount">正在加载条目...</span>
+    <span>数据来源：2026 最新国家法律法规与顶刊临床医学指南</span>
+  </div>
+
+  <div id="itemsContainer"></div>
+</div>
+
+<script>
+// 这里通过内联轻量数据加载，或客户端异步加载
+window.CORPUS_DATA = [];
+
+async function init() {
+  const mdFiles = [
+    'book/01-生命安全与黄金急救窗口.md',
+    'book/02-视力口腔脊柱与睡眠管理.md',
+    'book/03-青春期发育与男女生理专章.md',
+    'book/04-科学外形管理与体态避坑.md',
+    'book/05-循证高效学习与脑力保护.md',
+    'book/06-家庭教育医疗消费避坑清单.md',
+    'book/07-心理自救校园防欺凌与安全边界.md',
+    'book/08-网络防诈与个人数字资产安全.md',
+    'book/09-青少年法律红线与2026新法解读.md',
+    'book/10-普通家庭升学路径与国家资助全解.md'
+  ];
+
+  let allItems = [];
+  for (const f of mdFiles) {
+    try {
+      const res = await fetch(f);
+      if (!res.ok) continue;
+      const text = await res.text();
+      const items = parseMarkdownItems(text, f);
+      allItems.push(...items);
+    } catch (e) {
+      console.warn("Fetch failed for", f, e);
+    }
+  }
+
+  window.CORPUS_DATA = allItems;
+  renderItems(allItems);
+}
+
+function parseMarkdownItems(text, fileName) {
+  const regex = /(?ms)^### (\d+)\.\s*(`\[[^\]]+\]`)\s*(`\[[^\]]+\]`)\s*(.*?)\r?\n(.*?)(?=(?:^### \d+\.)|\Z)/g;
+  let matches;
+  const list = [];
+  while ((matches = regex.exec(text)) !== null) {
+    const num = matches[1];
+    const tag1 = matches[2].replace(/[`\[\]]/g, '');
+    const tag2 = matches[3].replace(/[`\[\]]/g, '');
+    const title = matches[4].trim();
+    const body = matches[5];
+
+    const getField = (label) => {
+      const m = body.match(new RegExp(`- \\*\\*${label}\\*\\*：([^\\r\\n]+)`));
+      return m ? m[1].trim() : '';
+    };
+
+    const getFullField = (label) => {
+      const m = body.match(new RegExp(`- \\*\\*${label}\\*\\*：([\\s\\S]*?)(?=(?:- \\*\\*)|$)`));
+      return m ? m[1].trim() : '';
+    };
+
+    const cost = getField('成本');
+    const plain = getField('说人话');
+    const benefit = getFullField('收益');
+    const level = getField('证据等级');
+    const source = getFullField('来源');
+    const remark = getFullField('备注');
+
+    // 提取转给爸妈看话术
+    let parentQuote = '';
+    const quoteMatch = remark.match(/【直接转给爸妈看】：(.*?)$/);
+    if (quoteMatch) {
+      parentQuote = quoteMatch[1].trim();
+    }
+
+    list.push({ num, tag1, tag2, title, cost, plain, benefit, level, source, remark, parentQuote, fileName });
+  }
+  return list;
+}
+
+let currentFilters = { gender: 'all', actor: 'all', query: '' };
+
+function setFilter(btn) {
+  const type = btn.getAttribute('data-filter');
+  const val = btn.getAttribute('data-val');
+  document.querySelectorAll(`.btn-tag[data-filter="${type}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilters[type] = val;
+  filterItems();
+}
+
+function filterItems() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  currentFilters.query = query;
+
+  const filtered = window.CORPUS_DATA.filter(item => {
+    if (currentFilters.gender === 'boy' && item.tag1 !== '男孩必看') return false;
+    if (currentFilters.gender === 'girl' && item.tag1 !== '女孩必看') return false;
+    if (currentFilters.gender === 'common' && item.tag1 !== '通用') return false;
+
+    if (currentFilters.actor === 'self' && item.tag2 !== '自己就能做') return false;
+    if (currentFilters.actor === 'parent' && item.tag2 !== '找爸妈一起办') return false;
+
+    if (query) {
+      const match = item.title.toLowerCase().includes(query) ||
+                    item.plain.toLowerCase().includes(query) ||
+                    item.benefit.toLowerCase().includes(query) ||
+                    item.cost.toLowerCase().includes(query);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  renderItems(filtered);
+}
+
+function renderItems(items) {
+  const container = document.getElementById('itemsContainer');
+  document.getElementById('resultCount').textContent = `匹配到 ${items.length} 条建议`;
+
+  if (!items.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:#94a3b8;">没有找到符合条件的建议，换个词试试？</div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(it => {
+    let tagClass = 'all';
+    if (it.tag1.includes('男')) tagClass = 'boy';
+    if (it.tag1.includes('女')) tagClass = 'girl';
+
+    return `
+      <div class="card">
+        <div class="card-title">
+          <span style="color:#2563eb;">#${it.num}</span>
+          <span class="badge ${tagClass}">${it.tag1}</span>
+          <span class="badge level">证据 ${it.level}级</span>
+          <span>${it.title}</span>
+        </div>
+        
+        <div class="plain-box">
+          <strong>💡 说人话：</strong>${it.plain}
+        </div>
+
+        <div class="section-item"><strong>💰 成本：</strong>${it.cost}</div>
+        <div class="section-item"><strong>📊 收益与依据：</strong>${it.benefit}</div>
+        <div class="section-item"><strong>🔗 权威来源：</strong><span style="font-size:12px;color:#64748b;">${it.source}</span></div>
+
+        ${it.parentQuote ? `
+          <div class="parent-quote">
+            <span><strong>📢 直接发给爸妈看：</strong>${it.parentQuote}</span>
+            <button class="copy-btn" onclick="copyText('${it.parentQuote.replace(/'/g, "\\'")}')">一键复制</button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(() => {
+    alert("已复制话术到剪贴板，可直接粘贴微信发给爸妈！");
+  }).catch(() => {
+    prompt("请手动复制以下话术：", txt);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
