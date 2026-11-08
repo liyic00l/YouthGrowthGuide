@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>青少年高性价比成长指南 · 循证行动手册与家庭护航平台</title>
+<meta name="description" content="专为 10—18 岁中国普通家庭青少年及家长打造，收录 109 条循证行动建议，支持男女双轨筛选与已落实打卡管理。">
+<style>
+:root {
+  --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b;
+  --primary: #2563eb; --primary-hover: #1d4ed8; --border: #e2e8f0;
+  --tag-bg: #f1f5f9; --boy: #0284c7; --girl: #db2777; --all: #059669;
+  --green: #10b981; --green-soft: #d1fae5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --muted: #94a3b8;
+    --primary: #60a5fa; --primary-hover: #3b82f6; --border: #334155;
+    --tag-bg: #334155; --boy: #38bdf8; --girl: #f472b6; --all: #34d399;
+    --green: #34d399; --green-soft: #064e3b;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 80px; }
+header { background: #1e293b; color: #fff; padding: 32px 20px; text-align: center; }
+header h1 { font-size: 26px; margin-bottom: 8px; font-weight: 800; }
+header p { font-size: 14px; color: #94a3b8; max-width: 680px; margin: 0 auto; line-height: 1.5; }
+.header-nav { margin-top: 16px; display: flex; justify-content: center; gap: 12px; }
+.nav-pill { display: inline-block; padding: 6px 16px; background: rgba(255,255,255,0.12); border-radius: 20px; font-size: 13.5px; color: #fff; text-decoration: none; transition: background 0.2s; }
+.nav-pill:hover { background: rgba(255,255,255,0.25); text-decoration: none; }
+.container { max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+
+/* 进度追踪面板 */
+.progress-panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.prog-info b { font-size: 18px; color: var(--green); }
+.prog-bar-bg { flex: 1; height: 10px; background: var(--tag-bg); border-radius: 5px; overflow: hidden; margin: 0 12px; }
+.prog-bar-fill { height: 100%; width: 0%; background: var(--green); transition: width 0.3s ease; }
+.prog-actions button { font-size: 12.5px; color: var(--muted); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; }
+
+/* 筛选区域 */
+.filters { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.search-bar { width: 100%; padding: 12px 16px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; margin-bottom: 14px; outline: none; background: var(--bg); color: var(--text); }
+.search-bar:focus { border-color: var(--primary); }
+.tag-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
+.tag-label { font-size: 13px; font-weight: 600; color: var(--muted); margin-right: 4px; }
+.btn-tag { padding: 5px 12px; border-radius: 20px; font-size: 13px; border: 1px solid var(--border); background: var(--tag-bg); color: var(--text); cursor: pointer; transition: all 0.2s; }
+.btn-tag.active { background: var(--primary); color: #fff; border-color: var(--primary); font-weight: 600; }
+.btn-tag.boy.active { background: var(--boy); border-color: var(--boy); }
+.btn-tag.girl.active { background: var(--girl); border-color: var(--girl); }
+.stats-bar { font-size: 13px; color: var(--muted); margin-bottom: 16px; display: flex; justify-content: space-between; }
+
+/* 条目卡片 */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: transform 0.15s; }
+.card.done { opacity: 0.7; background: var(--tag-bg); }
+.card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.card-title { font-size: 17px; font-weight: 700; line-height: 1.4; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.check-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; padding: 4px 10px; border-radius: 20px; border: 1.5px solid var(--border); cursor: pointer; background: var(--bg); color: var(--muted); transition: all 0.2s; user-select: none; }
+.check-toggle.checked { background: var(--green-soft); color: var(--green); border-color: var(--green); }
+.badge { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 600; flex-shrink: 0; }
+.badge.boy { background: #e0f2fe; color: #0369a1; }
+.badge.girl { background: #fce7f3; color: #be185d; }
+.badge.all { background: #dcfce7; color: #15803d; }
+.badge.level { background: #fef3c7; color: #b45309; }
+.section-item { margin-bottom: 8px; font-size: 14px; }
+.section-item strong { color: var(--muted); font-size: 13px; }
+.plain-box { background: var(--tag-bg); border-left: 3px solid var(--primary); padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 10px 0; font-size: 14px; line-height: 1.55; }
+.parent-quote { background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 6px; padding: 10px 12px; margin-top: 10px; font-size: 13px; color: #92400e; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+@media (prefers-color-scheme: dark) {
+  .parent-quote { background: #451a03; border-color: #b45309; color: #fde68a; }
+}
+.copy-btn { background: #f59e0b; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
+.copy-btn:hover { background: #d97706; }
+</style>
+</head>
+<body>
+<header>
+  <h1>青少年高性价比成长指南</h1>
+  <p>对标循证体系 · 专为 10—18 岁中国普通家庭打造 · 20大精细篇章共 109 条行动建议</p>
+  <div class="header-nav">
+    <a href="selfcheck.html" class="nav-pill">🛡️ 家庭护航自查问卷</a>
+    <a href="docs/家庭书桌与冰箱护航速查卡_A4打印版.md" class="nav-pill">📄 A4打印速查卡</a>
+    <a href="docs/家庭中高考冲刺与青春期常备医药箱配置清单.md" class="nav-pill">💊 常备医药箱清单</a>
+    <a href="docs/当孩子被学校约谈或遭遇违纪调查时家长的谈判策略手册.md" class="nav-pill">🤝 家校约谈谈判SOP</a>
+  </div>
+</header>
+
+<div class="container">
+  <!-- 落实打卡进度栏 -->
+  <div class="progress-panel">
+    <div class="prog-info">
+      家庭护航已落实：<b id="doneCount">0</b> / <span id="totalCount">109</span> 条
+      <span style="font-size:13px;color:var(--muted);margin-left:6px" id="pctText">(0%)</span>
+    </div>
+    <div class="prog-bar-bg">
+      <div class="prog-bar-fill" id="progFill"></div>
+    </div>
+    <div class="prog-actions">
+      <button onclick="toggleFilterDone()">仅看未落实</button>
+      <button onclick="resetDone()" style="margin-left:4px">重置打卡</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="searchInput" class="search-bar" placeholder="搜索关键词，如：阿托品、窝沟封闭、痛经、助学贷款、帮信罪、开盒..." oninput="filterItems()">
+    
+    <div class="tag-group">
+      <span class="tag-label">人群视角:</span>
+      <button class="btn-tag active" data-filter="gender" data-val="all" onclick="setFilter(this)">全部</button>
+      <button class="btn-tag boy" data-filter="gender" data-val="boy" onclick="setFilter(this)">男生必看</button>
+      <button class="btn-tag girl" data-filter="gender" data-val="girl" onclick="setFilter(this)">女生必看</button>
+      <button class="btn-tag" data-filter="gender" data-val="common" onclick="setFilter(this)">通用核心</button>
+    </div>
+
+    <div class="tag-group">
+      <span class="tag-label">行动主体:</span>
+      <button class="btn-tag active" data-filter="actor" data-val="all" onclick="setFilter(this)">全部</button>
+      <button class="btn-tag" data-filter="actor" data-val="self" onclick="setFilter(this)">自己就能做</button>
+      <button class="btn-tag" data-filter="actor" data-val="parent" onclick="setFilter(this)">找爸妈一起办</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <span id="resultCount">正在展示条目...</span>
+    <span>双击离线秒开 · 数据来源：2026 最新国家法律法规与顶刊临床医学指南</span>
+  </div>
+
+  <div id="itemsContainer"></div>
+</div>
+
+<script>
+/*__CORPUS_JSON__*/
+
+let doneMap = {};
+try {
+  doneMap = JSON.parse(localStorage.getItem('YGG_DONE_ITEMS') || '{}');
+} catch (e) { doneMap = {}; }
+
+let currentFilters = { gender: 'all', actor: 'all', query: '', onlyUnfinished: false };
+
+function saveDone() {
+  try {
+    localStorage.setItem('YGG_DONE_ITEMS', JSON.stringify(doneMap));
+  } catch (e) {}
+  updateProgress();
+}
+
+function toggleItemDone(num) {
+  if (doneMap[num]) {
+    delete doneMap[num];
+  } else {
+    doneMap[num] = true;
+  }
+  saveDone();
+  filterItems();
+}
+
+function updateProgress() {
+  const total = window.CORPUS_DATA.length;
+  const done = Object.keys(doneMap).filter(k => doneMap[k]).length;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById('doneCount').textContent = done;
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('pctText').textContent = `(${pct}%)`;
+  document.getElementById('progFill').style.width = pct + '%';
+}
+
+function toggleFilterDone() {
+  currentFilters.onlyUnfinished = !currentFilters.onlyUnfinished;
+  event.target.style.background = currentFilters.onlyUnfinished ? 'var(--primary)' : '';
+  event.target.style.color = currentFilters.onlyUnfinished ? '#fff' : '';
+  filterItems();
+}
+
+function resetDone() {
+  if (confirm('确定要清空所有已落实打卡记录吗？')) {
+    doneMap = {};
+    saveDone();
+    filterItems();
+  }
+}
+
+function setFilter(btn) {
+  const type = btn.getAttribute('data-filter');
+  const val = btn.getAttribute('data-val');
+  document.querySelectorAll(`.btn-tag[data-filter="${type}"]`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilters[type] = val;
+  filterItems();
+}
+
+function filterItems() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  currentFilters.query = query;
+
+  const filtered = window.CORPUS_DATA.filter(item => {
+    if (currentFilters.onlyUnfinished && doneMap[item.num]) return false;
+
+    if (currentFilters.gender === 'boy' && item.tag1 !== '男孩必看') return false;
+    if (currentFilters.gender === 'girl' && item.tag1 !== '女孩必看') return false;
+    if (currentFilters.gender === 'common' && item.tag1 !== '通用') return false;
+
+    if (currentFilters.actor === 'self' && item.tag2 !== '自己就能做') return false;
+    if (currentFilters.actor === 'parent' && item.tag2 !== '找爸妈一起办') return false;
+
+    if (query) {
+      const match = item.title.toLowerCase().includes(query) ||
+                    item.plain.toLowerCase().includes(query) ||
+                    item.benefit.toLowerCase().includes(query) ||
+                    item.cost.toLowerCase().includes(query);
+      if (!match) return false;
+    }
+    return true;
+  });
+
+  renderItems(filtered);
+}
+
+function renderItems(items) {
+  const container = document.getElementById('itemsContainer');
+  document.getElementById('resultCount').textContent = `匹配到 ${items.length} 条建议`;
+
+  if (!items.length) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted);">没有找到符合条件的建议，换个词试试？</div>`;
+    return;
+  }
+
+  container.innerHTML = items.map(it => {
+    let tagClass = 'all';
+    if (it.tag1.includes('男')) tagClass = 'boy';
+    if (it.tag1.includes('女')) tagClass = 'girl';
+    const isDone = !!doneMap[it.num];
+
+    return `
+      <div class="card ${isDone ? 'done' : ''}">
+        <div class="card-header">
+          <div class="card-title">
+            <span style="color:var(--primary);">#${it.num}</span>
+            <span class="badge ${tagClass}">${it.tag1}</span>
+            <span class="badge level">证据 ${it.level}级</span>
+            <span>${it.title}</span>
+          </div>
+          <button class="check-toggle ${isDone ? 'checked' : ''}" onclick="toggleItemDone('${it.num}')">
+            ${isDone ? '✓ 已落实' : '○ 标记落实'}
+          </button>
+        </div>
+        
+        <div class="plain-box">
+          <strong>💡 说人话：</strong>${it.plain}
+        </div>
+
+        <div class="section-item"><strong>💰 成本：</strong>${it.cost}</div>
+        <div class="section-item"><strong>📊 收益与依据：</strong>${it.benefit}</div>
+        <div class="section-item"><strong>🔗 权威来源：</strong><span style="font-size:12px;color:var(--muted);">${it.source}</span></div>
+
+        ${it.parentQuote ? `
+          <div class="parent-quote">
+            <span><strong>📢 直接发给爸妈看：</strong>${it.parentQuote}</span>
+            <button class="copy-btn" onclick="copyText('${it.parentQuote.replace(/'/g, "\\'")}')">一键复制</button>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function copyText(txt) {
+  navigator.clipboard.writeText(txt).then(() => {
+    alert("已复制话术到剪贴板，可直接粘贴微信发给爸妈！");
+  }).catch(() => {
+    prompt("请手动复制以下话术：", txt);
+  });
+}
+
+function init() {
+  updateProgress();
+  renderItems(window.CORPUS_DATA);
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

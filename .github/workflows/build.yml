@@ -1,0 +1,69 @@
+name: 自动化构建与质检
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: 20章全书字段与质量检查
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 运行全书 109 条目严格质量校验
+        run: |
+          powershell -ExecutionPolicy Bypass -File tools/verify-items.ps1
+
+      - name: 重新编译并验证离线版 HTML
+        run: |
+          powershell -ExecutionPolicy Bypass -File tools/build.ps1
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: YouthGrowthGuide-HTML-Offline
+          path: |
+            index.html
+            selfcheck.html
+            dist/YouthGrowthGuide_单文件离线版.html
+
+  release:
+    name: 自动发布最新离线包到 Release
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备打包产物
+        run: |
+          mkdir -p dist
+          cp index.html dist/YouthGrowthGuide_离线网页检索版.html
+          cp selfcheck.html dist/YouthGrowthGuide_家庭自查问卷.html
+
+      - name: 发布到 Release latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest
+          git push -f origin latest || true
+          notes="自动化构建产物（提交：${GITHUB_SHA:0:7}）。包含零网络依赖、双击秒开的离线单文件版 HTML 与家庭护航自查问卷。"
+          if gh release view latest >/dev/null 2>&1; then
+            gh release edit latest --title "青少年高性价比成长指南（最新版）" --notes "$notes"
+          else
+            gh release create latest --title "青少年高性价比成长指南（最新版）" --notes "$notes" --latest=true
+          fi
+          gh release upload latest \
+            dist/YouthGrowthGuide_离线网页检索版.html \
+            dist/YouthGrowthGuide_家庭自查问卷.html --clobber
