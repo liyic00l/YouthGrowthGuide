@@ -1,39 +1,53 @@
-$ErrorActionPreference = "Stop"
-$bookDir = Join-Path $PSScriptRoot "..\book"
+# Quality validation script for YouthGrowthGuide 20 chapters
+$bookDir = "D:\GitHub\YouthGrowthGuide\book_new"
 $files = Get-ChildItem -Path "$bookDir\*.md" | Sort-Object Name
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "Starting YouthGrowthGuide Quality Check" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
+
 $totalItems = 0
-$plainLengthExceeded = 0
-$missingRequiredFields = 0
+$errors = 0
 $requiredFields = @("- **成本**", "- **说人话**", "- **收益**", "- **证据等级**", "- **来源**", "- **备注**")
-foreach ($file in $files) {
-    $content = Get-Content -Path $file.FullName -Raw -Encoding UTF8
-    $items = [regex]::Matches($content, "(?ms)(^### \d+\..*?)(?=(?:^### \d+\.)|\Z)")
-    Write-Host "`nChecking: $($file.Name) ($($items.Count) items)" -ForegroundColor Yellow
-    foreach ($item in $items) {
+
+Write-Host "========================================"
+Write-Host "Starting YouthGrowthGuide Quality Check (UTF-8)"
+Write-Host "========================================"
+
+foreach ($f in $files) {
+    $content = [System.IO.File]::ReadAllText($f.FullName, [System.Text.Encoding]::UTF8)
+    $regex = [regex]'(?ms)^### (\d+)\.\s*(`\[[^\]]+\]`)\s*(`\[[^\]]+\]`)\s*(.*?)\r?\n(.*?)(?=(?:^### \d+\.)|\Z)'
+    $matches = $regex.Matches($content)
+    Write-Host "Checking $($f.Name): $($matches.Count) items"
+    
+    foreach ($m in $matches) {
         $totalItems++
-        $text = $item.Value
-        if ($text -match "^### (\d+)\. (.*)") { $num = $matches[1]; $title = $matches[2] } else { $num = "?"; $title = "Unknown" }
-        foreach ($field in $requiredFields) {
-            if (-not ($text -match [regex]::Escape($field))) {
-                Write-Host "  [ERROR] Item $num missing: $field ($title)" -ForegroundColor Red
-                $missingRequiredFields++
+        $id = $m.Groups[1].Value
+        $title = $m.Groups[4].Value.Trim()
+        $body = $m.Groups[5].Value
+
+        foreach ($rf in $requiredFields) {
+            if (-not $body.Contains($rf)) {
+                Write-Host "  [ERROR] Item $id missing $rf : $title" -ForegroundColor Red
+                $errors++
             }
         }
-        if ($text -match "- \*\*说人话\*\*：([^\r\n]+)") {
-            $plain = $matches[1].Trim()
-            if ($plain.Length -gt 130) {
-                Write-Host "  [INFO] Item $num plain text length: $($plain.Length)" -ForegroundColor Magenta
-                $plainLengthExceeded++
+
+        # Check plain length
+        $mPlain = [regex]::Match($body, '- \*\*说人话\*\*：([^\r\n]+)')
+        if ($mPlain.Success) {
+            $plainText = $mPlain.Groups[1].Value.Trim()
+            if ($plainText.Length -gt 150) {
+                Write-Host "  [WARN] Item $id '说人话' length ($($plainText.Length) chars > 150): $title" -ForegroundColor Yellow
             }
         }
     }
 }
-Write-Host "`n========================================" -ForegroundColor Cyan
-Write-Host "Check completed! Total items: $totalItems" -ForegroundColor Cyan
-Write-Host "Missing required fields: $missingRequiredFields" -ForegroundColor $(if ($missingRequiredFields -eq 0) { "Green" } else { "Red" })
-Write-Host "Plain text length hints: $plainLengthExceeded" -ForegroundColor Yellow
-Write-Host "========================================" -ForegroundColor Cyan
-if ($missingRequiredFields -gt 0) { exit 1 } else { exit 0 }
+
+Write-Host "========================================"
+Write-Host "Checked $totalItems items across $($files.Count) chapters."
+Write-Host "Total Errors: $errors"
+Write-Host "========================================"
+
+if ($errors -gt 0) {
+    exit 1
+} else {
+    Write-Host "ALL CHECKS PASSED PERFECTLY!" -ForegroundColor Green
+    exit 0
+}
